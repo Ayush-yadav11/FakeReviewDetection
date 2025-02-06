@@ -55,7 +55,7 @@ The dataset contains real and fake reviews labeled accordingly. Data preprocessi
 ## Author
 
 **Ayush Yadav**\
-[GitHub](https://github.com/your-username) | [LinkedIn](https://linkedin.com/in/your-profile)
+[GitHub](https://github.com/Ayush-yadav11) | [LinkedIn](https://www.linkedin.com/in/ayushyadav2611/)
 
 ##
 
