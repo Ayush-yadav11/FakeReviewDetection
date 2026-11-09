@@ -1,0 +1,977 @@
+{
+ "accuracy": 0.8856,
+ "samples": [
+  {
+   "category": "Books",
+   "rating": 3.0,
+   "label": "CG",
+   "text": "Good book with some twist and turns, with lots of action and suspense, and a strong heroine.I read this book in the middle of the night, and it was great. ",
+   "p_or": 0.3522,
+   "pred": "CG",
+   "words": 14,
+   "top": [
+    [
+     "strong",
+     -0.9557
+    ],
+    [
+     "book",
+     -0.7485
+    ],
+    [
+     "Good",
+     0.4629
+    ],
+    [
+     "middle",
+     -0.4048
+    ],
+    [
+     "twist",
+     0.3229
+    ],
+    [
+     "read",
+     -0.2734
+    ]
+   ]
+  },
+  {
+   "category": "Books",
+   "rating": 4.0,
+   "label": "OR",
+   "text": "I enjoy this author and I particularly like the light hearted Chrstmas stories.  THey add to the happiness of Christmas and take one away from the bussel and hecticness of ones presnt duties.",
+   "p_or": 0.8722,
+   "pred": "OR",
+   "words": 19,
+   "top": [
+    [
+     "author",
+     -0.6466
+    ],
+    [
+     "away",
+     0.5304
+    ],
+    [
+     "enjoy",
+     0.4245
+    ],
+    [
+     "stories",
+     0.3785
+    ],
+    [
+     "add",
+     0.3281
+    ],
+    [
+     "ones",
+     -0.3264
+    ]
+   ]
+  },
+  {
+   "category": "Clothing Shoes and Jewelry",
+   "rating": 1.0,
+   "label": "CG",
+   "text": "This robe is great in the summer and the materials are good.  The only reason I ordered this is because I had to get a size down and the waist was too short.  The quality of this robe is outstanding",
+   "p_or": 0.0683,
+   "pred": "CG",
+   "words": 14,
+   "top": [
+    [
+     "reason",
+     -1.2218
+    ],
+    [
+     "materials",
+     -0.9709
+    ],
+    [
+     "quality",
+     -0.4342
+    ],
+    [
+     "good",
+     -0.2312
+    ],
+    [
+     "waist",
+     -0.2281
+    ],
+    [
+     "ordered",
+     -0.2082
+    ]
+   ]
+  },
+  {
+   "category": "Clothing Shoes and Jewelry",
+   "rating": 4.0,
+   "label": "OR",
+   "text": "Shirt is awesome. I used this brand before but feels a bit short. I'm 6ft, felt like it was 1-2 inches too short.",
+   "p_or": 0.8984,
+   "pred": "OR",
+   "words": 14,
+   "top": [
+    [
+     "bit",
+     -0.5776
+    ],
+    [
+     "12",
+     0.5392
+    ],
+    [
+     "brand",
+     0.5035
+    ],
+    [
+     "inches",
+     0.4325
+    ],
+    [
+     "used",
+     -0.3629
+    ],
+    [
+     "Im",
+     -0.3015
+    ]
+   ]
+  },
+  {
+   "category": "Electronics",
+   "rating": 3.0,
+   "label": "CG",
+   "text": "This sounds good if you are an amateur with a sound bar.  If you are a professional speaker owner, you may want to look at some of the better brands.  I used these with a 50\" AM/FM radio",
+   "p_or": 0.284,
+   "pred": "CG",
+   "words": 17,
+   "top": [
+    [
+     "speaker",
+     -0.4937
+    ],
+    [
+     "professional",
+     -0.4795
+    ],
+    [
+     "may",
+     0.3481
+    ],
+    [
+     "brands",
+     -0.3367
+    ],
+    [
+     "used",
+     -0.3299
+    ],
+    [
+     "better",
+     0.3214
+    ]
+   ]
+  },
+  {
+   "category": "Electronics",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "This item works with the Verizon Fios basic Motorola box, plug it into the IR jack in rear of FIOS box and that's it.",
+   "p_or": 0.7861,
+   "pred": "OR",
+   "words": 14,
+   "top": [
+    [
+     "thats",
+     0.3817
+    ],
+    [
+     "box",
+     -0.3387
+    ],
+    [
+     "plug",
+     0.2641
+    ],
+    [
+     "item",
+     -0.1954
+    ],
+    [
+     "basic",
+     -0.1475
+    ],
+    [
+     "IR",
+     0.1426
+    ]
+   ]
+  },
+  {
+   "category": "Home and Kitchen",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "We received this item early and it arrived with a very good seal.  The dimensions are just right",
+   "p_or": 0.4284,
+   "pred": "CG",
+   "words": 8,
+   "top": [
+    [
+     "dimensions",
+     -1.0314
+    ],
+    [
+     "good",
+     -0.3709
+    ],
+    [
+     "right",
+     0.333
+    ],
+    [
+     "item",
+     -0.2894
+    ],
+    [
+     "early",
+     0.1541
+    ],
+    [
+     "received",
+     0.0298
+    ]
+   ]
+  },
+  {
+   "category": "Home and Kitchen",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "I absolutely love this Dutch Oven!  Already made several dishes using it.  A friend of mine had it and loved it, so I got one for myself.  Highly recommended if you love cooking stews, sauce, chili, etc.",
+   "p_or": 0.8454,
+   "pred": "OR",
+   "words": 22,
+   "top": [
+    [
+     "etc",
+     0.4888
+    ],
+    [
+     "friend",
+     -0.4312
+    ],
+    [
+     "love",
+     -0.4154
+    ],
+    [
+     "recommended",
+     0.3905
+    ],
+    [
+     "using",
+     -0.3745
+    ],
+    [
+     "dishes",
+     0.2832
+    ]
+   ]
+  },
+  {
+   "category": "Kindle Store",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "Fascinating book, great writer. I recommend it.I really enjoyed this book. It is a short story. It is not the best read,",
+   "p_or": 0.1161,
+   "pred": "CG",
+   "words": 13,
+   "top": [
+    [
+     "itI",
+     -1.1286
+    ],
+    [
+     "book",
+     -0.7943
+    ],
+    [
+     "really",
+     0.4975
+    ],
+    [
+     "story",
+     -0.4718
+    ],
+    [
+     "Fascinating",
+     0.4191
+    ],
+    [
+     "recommend",
+     -0.3598
+    ]
+   ]
+  },
+  {
+   "category": "Kindle Store",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "The book pulls you in from the first page. I couldn't put it down. I read it in one day because I just couldn't stop. Once again Miss Loraine writes a book that is absolutely brilliant.",
+   "p_or": 0.8407,
+   "pred": "OR",
+   "words": 17,
+   "top": [
+    [
+     "book",
+     -0.5786
+    ],
+    [
+     "stop",
+     0.456
+    ],
+    [
+     "page",
+     0.4553
+    ],
+    [
+     "day",
+     0.3942
+    ],
+    [
+     "one",
+     -0.2692
+    ],
+    [
+     "pulls",
+     0.2403
+    ]
+   ]
+  },
+  {
+   "category": "Movies and TV",
+   "rating": 4.0,
+   "label": "CG",
+   "text": "taken seriously as in all the other movies.  The acting is top notch, the directing is top notch, and the cinematography is top notch.  The story line is very moving and it's well told.  The acting is top notch.  The plot is top",
+   "p_or": 0.2874,
+   "pred": "CG",
+   "words": 22,
+   "top": [
+    [
+     "notch",
+     -0.9508
+    ],
+    [
+     "acting",
+     -0.7789
+    ],
+    [
+     "told",
+     -0.3463
+    ],
+    [
+     "story",
+     -0.1915
+    ],
+    [
+     "seriously",
+     0.1643
+    ],
+    [
+     "taken",
+     0.1503
+    ]
+   ]
+  },
+  {
+   "category": "Movies and TV",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "Ordered this after we realized someone was \"chatting\" with my daughter via a cell phone game (!)\r\nTrying to explain the threat and the reality of this was complicated.  This DVD did the trick.",
+   "p_or": 0.686,
+   "pred": "OR",
+   "words": 16,
+   "top": [
+    [
+     "game",
+     -0.4314
+    ],
+    [
+     "someone",
+     0.4121
+    ],
+    [
+     "cell",
+     -0.3516
+    ],
+    [
+     "phone",
+     -0.2857
+    ],
+    [
+     "trick",
+     0.2211
+    ],
+    [
+     "reality",
+     0.2132
+    ]
+   ]
+  },
+  {
+   "category": "Pet Supplies",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "Changed to this food in the past and the dogs love it.  This is the only grain free food that we feed our pets, and they're happy",
+   "p_or": 0.4906,
+   "pred": "CG",
+   "words": 12,
+   "top": [
+    [
+     "happy",
+     -0.3023
+    ],
+    [
+     "love",
+     -0.2729
+    ],
+    [
+     "dogs",
+     -0.2198
+    ],
+    [
+     "free",
+     -0.1548
+    ],
+    [
+     "food",
+     -0.1525
+    ],
+    [
+     "pets",
+     0.1394
+    ]
+   ]
+  },
+  {
+   "category": "Pet Supplies",
+   "rating": 4.0,
+   "label": "OR",
+   "text": "It works.  I give it 4 stars - it's fine for my 65lb dog (I use it as a ramp between the dock and the boat).  Good quality, not great.",
+   "p_or": 0.7027,
+   "pred": "OR",
+   "words": 14,
+   "top": [
+    [
+     "quality",
+     -0.4993
+    ],
+    [
+     "Good",
+     0.3794
+    ],
+    [
+     "dock",
+     0.3039
+    ],
+    [
+     "dog",
+     -0.2275
+    ],
+    [
+     "4",
+     -0.2157
+    ],
+    [
+     "give",
+     0.2095
+    ]
+   ]
+  },
+  {
+   "category": "Sports and Outdoors",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "These are great! I've been using these for years and they've held up well. I'm just starting to get used to the comfort of using the kids' shoulders, so I don't expect to be wearing them all day long.I was skeptical about the price, but it's not",
+   "p_or": 0.3572,
+   "pred": "CG",
+   "words": 22,
+   "top": [
+    [
+     "using",
+     -0.9376
+    ],
+    [
+     "starting",
+     -0.4353
+    ],
+    [
+     "day",
+     0.3871
+    ],
+    [
+     "Ive",
+     -0.3497
+    ],
+    [
+     "used",
+     -0.3492
+    ],
+    [
+     "expect",
+     0.3433
+    ]
+   ]
+  },
+  {
+   "category": "Sports and Outdoors",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "These fire well and the price is perfect. Just be careful not to accidentally hit metal of shoot at too hard of wood. Remember it's only a plastic shaft.",
+   "p_or": 0.7847,
+   "pred": "OR",
+   "words": 14,
+   "top": [
+    [
+     "plastic",
+     -0.754
+    ],
+    [
+     "fire",
+     0.314
+    ],
+    [
+     "metal",
+     0.3013
+    ],
+    [
+     "hard",
+     -0.2436
+    ],
+    [
+     "shoot",
+     0.2346
+    ],
+    [
+     "accidentally",
+     0.1954
+    ]
+   ]
+  },
+  {
+   "category": "Tools and Home Improvement",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "Quick shipping and excellent furnace control. The quality is good too.  The only reason I ordered this is because I had to replace a defective switch in the",
+   "p_or": 0.0488,
+   "pred": "CG",
+   "words": 12,
+   "top": [
+    [
+     "reason",
+     -1.5022
+    ],
+    [
+     "replace",
+     -1.179
+    ],
+    [
+     "quality",
+     -0.5339
+    ],
+    [
+     "defective",
+     -0.3534
+    ],
+    [
+     "good",
+     -0.2842
+    ],
+    [
+     "ordered",
+     -0.2561
+    ]
+   ]
+  },
+  {
+   "category": "Tools and Home Improvement",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "What'so not to like?  Well made, variable speed, easy chuck lock and 3 hr battery charge all at a low low price.",
+   "p_or": 0.969,
+   "pred": "OR",
+   "words": 16,
+   "top": [
+    [
+     "low",
+     0.7574
+    ],
+    [
+     "easy",
+     -0.3637
+    ],
+    [
+     "3",
+     0.3603
+    ],
+    [
+     "speed",
+     0.3389
+    ],
+    [
+     "Well",
+     0.3242
+    ],
+    [
+     "lock",
+     0.2899
+    ]
+   ]
+  },
+  {
+   "category": "Toys and Games",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "These is super cute and looks just like the picture. I will say that my daughter does not like the two small pieces",
+   "p_or": 0.457,
+   "pred": "CG",
+   "words": 11,
+   "top": [
+    [
+     "pieces",
+     -1.2388
+    ],
+    [
+     "super",
+     1.0511
+    ],
+    [
+     "small",
+     -0.877
+    ],
+    [
+     "like",
+     0.7625
+    ],
+    [
+     "two",
+     -0.6413
+    ],
+    [
+     "say",
+     -0.3047
+    ]
+   ]
+  },
+  {
+   "category": "Toys and Games",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "I gave this to my 21-month-old and she loves it. She has become fascinated with digging and playing in the dirt lately and immediately knew what to do with this. The toys seem well made.",
+   "p_or": 0.9517,
+   "pred": "OR",
+   "words": 15,
+   "top": [
+    [
+     "loves",
+     -0.5694
+    ],
+    [
+     "become",
+     0.4362
+    ],
+    [
+     "toys",
+     0.424
+    ],
+    [
+     "seem",
+     0.3976
+    ],
+    [
+     "immediately",
+     0.3372
+    ],
+    [
+     "playing",
+     0.2602
+    ]
+   ]
+  },
+  {
+   "category": "Pet Supplies",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "Very happy with product much better than the one we received.\r\n\r\nIf you have a dog who is prone to allergies, this may",
+   "p_or": 0.6583,
+   "pred": "OR",
+   "words": 10,
+   "top": [
+    [
+     "much",
+     0.8331
+    ],
+    [
+     "may",
+     0.5458
+    ],
+    [
+     "better",
+     0.5041
+    ],
+    [
+     "happy",
+     -0.4267
+    ],
+    [
+     "prone",
+     -0.3982
+    ],
+    [
+     "one",
+     -0.3918
+    ]
+   ]
+  },
+  {
+   "category": "Kindle Store",
+   "rating": 4.0,
+   "label": "OR",
+   "text": "Great characters. They were interesting and strong. The storyline is about healing and giving into love . Was surprised, has alot of  sexual situations that I was not expecting because I thought it would be more like a Christian book.",
+   "p_or": 0.3181,
+   "pred": "CG",
+   "words": 18,
+   "top": [
+    [
+     "strong",
+     -0.7364
+    ],
+    [
+     "characters",
+     -0.5671
+    ],
+    [
+     "situations",
+     0.3521
+    ],
+    [
+     "interesting",
+     -0.3427
+    ],
+    [
+     "book",
+     -0.2884
+    ],
+    [
+     "love",
+     -0.2638
+    ]
+   ]
+  },
+  {
+   "category": "Home and Kitchen",
+   "rating": 5.0,
+   "label": "CG",
+   "text": "It runs quiet and eliminated some of the noise we've heard in our bedroom. I'm not sure how",
+   "p_or": 0.7341,
+   "pred": "OR",
+   "words": 9,
+   "top": [
+    [
+     "runs",
+     0.6946
+    ],
+    [
+     "Im",
+     -0.3483
+    ],
+    [
+     "sure",
+     -0.3085
+    ],
+    [
+     "noise",
+     0.1611
+    ],
+    [
+     "bedroom",
+     -0.1448
+    ],
+    [
+     "heard",
+     0.1047
+    ]
+   ]
+  },
+  {
+   "category": "Movies and TV",
+   "rating": 5.0,
+   "label": "OR",
+   "text": "I remember this movie when I was growing up.. My kids loved it just as much as I did.. great kids movie..",
+   "p_or": 0.3925,
+   "pred": "CG",
+   "words": 9,
+   "top": [
+    [
+     "movie",
+     -1.7549
+    ],
+    [
+     "much",
+     0.7985
+    ],
+    [
+     "growing",
+     -0.3224
+    ],
+    [
+     "remember",
+     0.3168
+    ],
+    [
+     "great",
+     -0.1776
+    ],
+    [
+     "loved",
+     -0.1401
+    ]
+   ]
+  }
+ ],
+ "towards_cg": [
+  [
+   "problem",
+   -7.357
+  ],
+  [
+   "reason",
+   -6.983
+  ],
+  [
+   "couple",
+   -5.462
+  ],
+  [
+   "admit",
+   -5.352
+  ],
+  [
+   "replace",
+   -5.351
+  ],
+  [
+   "wide",
+   -5.233
+  ],
+  [
+   "keep",
+   -4.857
+  ],
+  [
+   "lot",
+   -4.709
+  ],
+  [
+   "downside",
+   -4.692
+  ],
+  [
+   "also",
+   -4.646
+  ],
+  [
+   "materials",
+   -4.618
+  ],
+  [
+   "plastic",
+   -4.214
+  ],
+  [
+   "developed",
+   -4.166
+  ],
+  [
+   "strong",
+   -3.971
+  ],
+  [
+   "characters",
+   -3.862
+  ],
+  [
+   "small",
+   -3.857
+  ]
+ ],
+ "towards_or": [
+  [
+   "even",
+   5.751
+  ],
+  [
+   "though",
+   4.671
+  ],
+  [
+   "without",
+   4.285
+  ],
+  [
+   "much",
+   3.695
+  ],
+  [
+   "quite",
+   3.578
+  ],
+  [
+   "less",
+   3.481
+  ],
+  [
+   "actually",
+   3.41
+  ],
+  [
+   "Would",
+   3.377
+  ],
+  [
+   "others",
+   3.278
+  ],
+  [
+   "another",
+   3.275
+  ],
+  [
+   "wont",
+   3.181
+  ],
+  [
+   "could",
+   3.15
+  ],
+  [
+   "However",
+   3.128
+  ],
+  [
+   "something",
+   3.12
+  ],
+  [
+   "far",
+   3.101
+  ],
+  [
+   "end",
+   3.095
+  ]
+ ]
+}

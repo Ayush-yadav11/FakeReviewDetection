@@ -1,0 +1,4 @@
+pandas>=2.1
+numpy>=1.25
+scikit-learn>=1.3
+nltk>=3.8

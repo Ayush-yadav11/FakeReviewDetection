@@ -1,0 +1,7 @@
+
+# project site: checker and screenshot output from the build, not part of the site
+site/.taste-skill/
+site/shots/
+site/tiles/
+__pycache__/
+.ipynb_checkpoints/

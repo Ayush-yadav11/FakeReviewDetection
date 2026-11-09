@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en" data-type="software" data-radius="soft" data-ground="sage" data-buttons="solid" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fake Review Detection: a detector for computer-generated product reviews</title>
+<meta name="description" content="Paste a product review and a model trained on 40,432 labelled Amazon reviews scores it in your browser, 88.6% accurate on reviews it never saw.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Fake Review Detection: a detector for computer-generated product reviews">
+<meta property="og:description" content="A logistic regression trained on 40,432 labelled reviews, running in your browser.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0a0d14">
+<!-- <link rel="canonical" href="https://ayush-yadav11.github.io/FakeReviewDetection/"> -->
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@400..700&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #0a0d14; --p-surface: #131824; --p-ink: #e9edf3; --p-muted: #8891a1;
+  --p-accent: #5ab9fc; --p-accent-ink: #0a0d14; --p-action: #5ab9fc; --p-action-ink: #0a0d14;
+  --p-inv-bg: #e9edf3; --p-inv-surface: #d7dbe1; --p-inv-ink: #0a0d14; --p-inv-muted: #54575f;
+  --p-inv-accent: #0a0d14; --p-inv-accent-ink: #e9edf3; --p-inv-action: #0a0d14; --p-inv-action-ink: #e9edf3;
+  --font-display: "Host Grotesk", system-ui, sans-serif;
+  --font-text: "Host Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 500;
+  --display-tracking: -0.035em;
+  --display-tracking-xl: -0.04em;
+}
+</style>
+<link rel="stylesheet" href="assets/ui/base.css">
+<link rel="stylesheet" href="assets/ui/window/fragment.css">
+<link rel="stylesheet" href="assets/diagrams/diagram.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/counter-rolls/moment.js">
+<link rel="modulepreload" href="assets/moments/marquee-row/moment.js">
+<style>
+  /* body text in the ink at 7:1: the centred hero's lead and the section intros */
+  .hero--centred .hero__lead { color: var(--ink); }
+  .lede { color: var(--ink); }
+  .section:is(.bg-halo, .bg-band, .bg-mist, .bg-dusk, .bg-dots) { align-content: start; }
+
+  /* ---- the hero window: the detector scoring one review (page CSS inside the visual) */
+  .hero__window { background: radial-gradient(120% 80% at 30% 110%, #9fb39a 0 30%, transparent 62%), radial-gradient(90% 70% at 85% 0%, #c9d4c2 0 25%, transparent 60%), #b8c6b1; }
+  .dw { background: #11151d; color: #e7ebf0; border-radius: 12px; overflow: hidden; font: 400 14px/1.45 var(--font-text);
+        box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 30px 70px -30px rgb(0 0 0 / .8); }
+  .dw__bar { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 14px; border-bottom: 1px solid rgb(255 255 255 / .07); font-size: 13px; color: #a7afbb; }
+  .dw__bar b { color: #e7ebf0; font-weight: 500; } .dw__bar .sp { flex: 1; }
+  .dw__dots { display: flex; gap: 6px; } .dw__dots i { width: 10px; height: 10px; border-radius: 50%; background: #343a45; }
+  .dw__body { display: grid; grid-template-columns: 260px 1fr; min-height: 420px; }
+  .dw__list { border-right: 1px solid rgb(255 255 255 / .07); padding: 10px; display: grid; align-content: start; gap: 2px; }
+  .dw__q { height: 34px; margin-bottom: 6px; border-radius: 9px; background: rgb(255 255 255 / .06); display: flex; align-items: center; padding: 0 10px; color: #a7afbb; font-size: 13px; }
+  .dw__row { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 9px 8px; border-radius: 9px; font-size: 13px; }
+  .dw__row.is-on { background: rgb(255 255 255 / .07); }
+  .dw__row b { font-weight: 500; color: #e7ebf0; } .dw__row span { grid-column: 1 / -1; color: #a7afbb; }
+  .dw__row em { font-style: normal; font-size: 13px; color: #a7afbb; font-variant-numeric: tabular-nums; }
+  .dw__chat { display: grid; gap: 10px; align-content: start; padding: 16px 18px; min-width: 0; }
+  .dw__me { justify-self: end; max-width: 86%; padding: 10px 14px; border-radius: 16px 16px 6px 16px; background: #e9edf3; color: #11151d; }
+  .dw__tool { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #a7afbb; }
+  .dw__tool::before { content: ""; width: 12px; height: 12px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; }
+  .dw__bot { max-width: 86%; padding: 10px 14px; border-radius: 16px 16px 16px 6px; background: #1d232e; }
+  .dw__bot strong { font-weight: 500; color: #ffc98a; }
+  @media (max-width: 1279px) { .dw__tool { display: none; } }
+  @media (max-width: 1023px) { .dw__body { grid-template-columns: 1fr; } .dw__list { display: none; } }
+  @media (max-width: 639px) { .dw__chat { padding: 12px 14px; font-size: 13px; } .dw__bar .sp ~ span { display: none; } }
+
+  /* ---- app-frame (sections-library.md, the recipe's CSS) */
+  .app.ui { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); margin-top: var(--s-7); background: var(--u-bg); border: 1px solid var(--u-border); border-radius: var(--u-r); box-shadow: var(--u-shadow); }
+  .app > .app__pane { position: relative; min-width: 0; min-height: 0; overflow: hidden; }
+  .app > .app__pane + .app__pane { border-left: 1px solid var(--u-line); }
+  .app > .app__pane > .ui-panel { width: 100%; border: 0; border-radius: 0; box-shadow: none; }
+  .app > .app__pane::after { content: ""; position: absolute; inset: auto 0 0 0; height: 64px; background: linear-gradient(transparent, var(--u-bg)); pointer-events: none; }
+  @media (min-width: 1024px) and (max-width: 1279px) { .app.ui { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); } }
+  @media (max-width: 1023px) {
+    .app.ui { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .app > .app__pane--list { max-height: 252px; }
+    .app > .app__pane--list::after { display: none; }
+    .app .ui-win__side { display: none; }
+    .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+    .app > .app__pane + .app__pane { border-left: 0; border-top: 1px solid var(--u-line); }
+  }
+  @media (max-width: 639px) {
+    .app.ui { grid-template-rows: minmax(0, 1fr); }
+    .app > .app__pane--list { display: none; }
+    .app > .app__pane + .app__pane { border-top: 0; }
+  }
+  /* the list: held-out reviews and the model's verdict; the open row is marked by a bar, not a band */
+  .app .ui-win { width: 100%; }
+  .app .ui-win__body { grid-template-columns: minmax(0, 1fr); }
+  .app .ui-win .ui-win__row { grid-template-columns: 24px minmax(0, 1fr) auto; grid-template-rows: auto; height: auto; min-height: 56px; padding-block: 10px; align-items: start; cursor: pointer; }
+  .app .ui-win .ui-win__row > * { grid-row: auto; }
+  .app .ui-win .ui-win__row > .ui-win__st { grid-column: 3; }
+  .app .ui-win .ui-win__row.is-sel { background: none; box-shadow: inset 3px 0 0 var(--u-accent); }
+  .app .ui-win .ui-win__row:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+  .app .ui-win__txt { display: grid; min-width: 0; }
+  .app .ui-win .ui-win__sub { white-space: normal; overflow: visible; text-overflow: clip; color: var(--u-text-2); }
+  .app .ui-win__st[data-v="CG"] { color: #ffc98a; box-shadow: inset 0 0 0 1px rgb(255 201 138 / .35); }
+  .app .ui-win__st[data-v="OR"] { color: var(--u-accent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--u-accent) 40%, transparent); }
+  .app .miss { margin-left: 6px; padding: 1px 6px; border-radius: 5px; font-size: 13px; font-weight: 500; color: #ffb4aa; background: rgb(255 120 100 / .14); }
+  /* the open pane: the review, its score, the words that moved it */
+  .det { display: grid; align-content: start; gap: 14px; padding: 16px 20px 24px; font-size: 13px; line-height: 1.5; color: var(--u-ink); }
+  .det__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .det__row label { color: var(--u-text-2); }
+  .det textarea { width: 100%; min-height: 64px; resize: vertical; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--u-border); background: var(--u-fill); color: var(--u-ink); font: 400 16px/1.45 var(--font-text); }
+  .det textarea:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .det__verdict { display: grid; gap: 8px; padding-block: 12px; border-block: 1px solid var(--u-line); }
+  .det__verdict b { font: 500 20px/1.2 var(--font-text); letter-spacing: -0.01em; }
+  .det__verdict b[data-v="CG"] { color: #ffc98a; } .det__verdict b[data-v="OR"] { color: var(--u-accent); }
+  .det__split { position: relative; height: 8px; border-radius: 99px; background: color-mix(in oklab, var(--u-accent) 55%, var(--u-bg)); overflow: hidden; }
+  .det__split i { position: absolute; inset: 0 auto 0 0; width: var(--cg, 50%); background: #ffc98a; transition: width 360ms var(--u-ease); }
+  .det__ends { display: flex; justify-content: space-between; color: var(--u-text-2); }
+  .det__text { margin: 0; font-size: 14px; line-height: 1.75; color: var(--u-text-2); }
+  .det__text mark { color: inherit; border-radius: 4px; padding: 1px 2px; }
+  .det__text mark[data-v="CG"] { background: rgb(255 201 138 / var(--a, .3)); }
+  .det__text mark[data-v="OR"] { background: color-mix(in oklab, var(--u-accent) calc(var(--a, .3) * 100%), transparent); }
+  .det__h { margin: 0; font-size: 13px; color: var(--u-text-2); }
+  @media (max-width: 639px) { .det__text { display: none; } }
+
+  /* ---- small UIs on the step and word panels */
+  #method .panel { --p-h: 336px; }
+  @media (max-width: 639px) { #method .panel { --p-h: 220px; } }
+  .mini { width: 100%; padding: 16px; border-radius: 12px; background: var(--u-bg); color: var(--u-ink); box-shadow: var(--u-shadow); font: 400 13px/1.5 var(--font-text); }
+  .mini__head { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; color: var(--u-text-2); }
+  .mini__head b { color: var(--u-ink); font-weight: 500; }
+  .tok { line-height: 2; margin: 0; }
+  .tok s { color: var(--u-muted); text-decoration-color: color-mix(in oklab, var(--u-muted) 70%, transparent); }
+  .tok b { font-weight: 500; padding: 2px 6px; border-radius: 6px; background: var(--u-fill-2); font-family: var(--font-mono); font-size: 13px; }
+  .bars { display: grid; gap: 8px; }
+  .bars > div { display: grid; grid-template-columns: 92px minmax(0, 1fr) 52px; align-items: center; gap: 10px; }
+  .bars span { font-family: var(--font-mono); font-size: 13px; }
+  .bars i { display: block; height: 8px; border-radius: 99px; width: var(--w); background: var(--u-ink); opacity: .75; }
+  .bars i.is-cg { background: #ffc98a; opacity: 1; } .bars i.is-or { background: var(--u-accent); opacity: 1; }
+  .bars em { font-style: normal; text-align: right; font-variant-numeric: tabular-nums; color: var(--u-text-2); font-size: 13px; }
+  .score { display: grid; gap: 10px; }
+  .score b { font: 500 22px/1.1 var(--font-text); color: #ffc98a; }
+  #words .panel { --p-h: 336px; }
+  @media (min-width: 640px) and (max-width: 1023px) { #words .panel { --p-h: 360px; } #data .rv-grid > .card { grid-column: 1 / -1; } }
+  @media (max-width: 639px) { #words .panel { --p-h: 236px; } #words .bars > div:nth-child(n+5), #words .phr tr:nth-child(n+4) { display: none; } }
+  .phr { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .phr th { text-align: left; font-weight: 400; color: var(--u-text-2); padding: 0 0 8px; }
+  .phr th + th, .phr td + td { text-align: right; }
+  .phr td { padding: 9px 0; border-top: 1px solid var(--u-line); font-variant-numeric: tabular-nums; }
+  .phr td:first-child { font-family: var(--font-mono); }
+  .len { display: grid; gap: 14px; }
+  .len div { display: grid; gap: 6px; }
+  .len span { display: flex; justify-content: space-between; color: var(--u-text-2); }
+  .len span b { color: var(--u-ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .len i { display: block; height: 14px; border-radius: 4px; width: var(--w); }
+
+  /* ---- numbers: the confusion matrix beside the four figures */
+  .cm { --fx-bg: #ffffff; --fx-ink: #1c2230; --fx-muted: #4f5869; --fx-accent: #1d6fb0; }
+  .cm .mini { max-width: 520px; }
+  .cm__grid { display: grid; grid-template-columns: 96px 1fr 1fr; gap: 6px; }
+  .cm__h { display: flex; align-items: end; justify-content: center; padding-bottom: 4px; font-size: 13px; color: var(--u-text-2); }
+  .cm__row { justify-content: start; align-items: center; padding: 0; }
+  .cm__c { display: grid; place-items: center; height: 96px; border-radius: 8px; font: 500 22px/1 var(--font-text); font-variant-numeric: tabular-nums;
+           background: color-mix(in oklab, #7fb5e3 calc(var(--k) * 100%), #f2f5f8); color: #102033; }
+  @media (max-width: 639px) { .cm__c { height: 64px; font-size: 18px; } .cm__grid { grid-template-columns: 76px 1fr 1fr; } }
+  @media (min-width: 640px) and (max-width: 1023px) { #numbers .stats > div { grid-column: span 3; } .cm__c { height: 72px; } }
+
+  /* ---- the training run, as the terminal printed it */
+  .term { margin-top: var(--s-6); padding: 18px 20px; border-radius: 12px; background: #11151d; color: #dfe5ec; font: 400 13px/1.7 var(--font-mono); box-shadow: 0 0 0 1px rgb(255 255 255 / .08); overflow: hidden; }
+  .term pre { margin: 0; white-space: pre; }
+  .term b { color: #5ab9fc; font-weight: 500; }
+  @media (max-width: 639px) { .term { font-size: 13px; padding: 14px; } .term pre { white-space: pre-wrap; } }
+  /* a phone: the labels question is answered in the dataset section, so the list keeps to one screen */
+  @media (max-width: 639px) { #faq .faq__item:last-child { display: none; } }
+  /* ---- data: two reviews from the same shelf */
+  .rv { display: grid; gap: 12px; }
+  .rv p { margin: 0; font-size: 16px; line-height: 1.6; }
+  .lab { justify-self: start; display: inline-flex; height: 26px; padding: 0 10px; border-radius: 6px; align-items: center; font-size: 13px; font-weight: 500; }
+  .lab[data-v="CG"] { background: #3a2a14; color: #ffd8a8; } .lab[data-v="OR"] { background: #12324a; color: #bfe3ff; }
+  #data .facts { margin-top: var(--s-6); }
+
+
+  /* the steps stack below 1280 (two-up, then one column): two screens there; the grounds' own minimum height follows */
+  @media (max-width: 1279px) { #method { --h: 2; --g-screen: calc(2 * 100svh); } }
+  @media (max-width: 639px) { #method { --g-screen: calc(2 * 100lvh); } }
+  #results .frame--split { --ratio: 112%; }
+  @media (min-width: 1024px) and (max-width: 1279px) { #results .frame--split { --ratio: 100%; } }
+  @media (min-width: 640px) and (max-width: 1023px) { #results .frame--split { --ratio: 56%; } }
+  @media (max-width: 639px) { #results .frame--split { --ratio: 92%; } }
+  /* list rows: the name over its line, on the row's own text column */
+  .app .ui-win__txt { justify-items: start; text-align: left; }
+  .app .ui-win__txt > * { grid-column: 1 !important; grid-row: auto !important; }
+</style>
+</head>
+<body>
+<!-- type: software (a machine learning project page; kind software)
+     deal: hero centred, nav nav-mega, close close-type, footer footer-columns, rhythm surface-pairs (results + words),
+           buttons solid, mark ring, ground sage, grounds method bg-halo and faq bg-band,
+           effect gradient-mesh in the hero window, card ground painterly-landscape (the first step's panel)
+     palette blue-black-cornflower: a near-black ground with one cool blue, the dark editor a model is trained in
+     type host (Host Grotesk + JetBrains Mono)
+     moments: counter-rolls in #numbers (the four figures of the retrain), marquee-row as the last row of #data (the ten categories) -->
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Skip to content</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>Fake Review Detection</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item"><a class="nav__link" href="#detector">Detector</a></div>
+      <div class="nav__item">
+        <a class="nav__link" href="#method">Scoring <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <div class="menu-col span-3">
+              <p class="t-label">Scoring steps</p>
+              <a href="#method">Review cleaning<span>Punctuation and stopwords out</span></a>
+              <a href="#method">Review weighting<span>TF-IDF for each word</span></a>
+              <a href="#method">Review scoring<span>16,338 learned weights</span></a>
+            </div>
+            <div class="menu-col span-3">
+              <p class="t-label">Models scored</p>
+              <a href="#results">SVC<span>90.0% of test reviews right</span></a>
+              <a href="#results">Logistic regression<span>88.5%, the page model</span></a>
+              <a href="#results">Random forest<span>86.0% of test reviews right</span></a>
+            </div>
+            <a class="menu-card span-3 start-10" href="#words">
+              <div class="panel"><div class="stage stage--fade-br"><div class="at-corner" style="--ax:24px;--ay:24px">
+                <div class="ui mini" style="width:280px"><div class="mini__head"><b>Toward generated</b></div>
+                  <div class="bars"><div><span>problem</span><i class="is-cg" style="--w:100%"></i><em>−7.36</em></div><div><span>reason</span><i class="is-cg" style="--w:95%"></i><em>−6.98</em></div><div><span>couple</span><i class="is-cg" style="--w:74%"></i><em>−5.46</em></div></div></div>
+              </div></div></div>
+              <span class="t-card">Words that give a review away</span>
+              <span class="t-small muted">The model’s strongest weights</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#results">Results</a></div>
+      <div class="nav__item"><a class="nav__link" href="#data">Reviews</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">Questions</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="#detector">Try the detector</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--centred" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text">
+      <div class="hero__c">
+        <a class="pill" href="#results"><span>All three models now finish training</span><span class="muted">See the results</span></a>
+        <h1 id="hero-h">Fake product review detector</h1>
+        <p class="hero__lead">Paste a product review and see whether a person or GPT-2 wrote it, scored in your browser by a model trained on 40,432 labelled reviews.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="#detector">Try the detector<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="https://github.com/Ayush-yadav11/FakeReviewDetection">Read the code</a></div>
+      </div>
+      <div class="hero__window" data-fx="gradient-mesh" data-fx-seed="7" data-fx-palette='{"bg":"#cdd6c6","surface":"#dce3d6","ink":"#262d24","accent":"#6c8e63"}' role="img" aria-label="The detector scoring a review about a furnace control: 95% likely generated, pushed by the words reason and replace">
+        <div class="ly-piece ui dw" aria-hidden="true">
+          <div class="dw__bar"><span class="dw__dots"><i></i><i></i><i></i></span><span><b>Detector</b> · Tools and Home Improvement</span><span class="sp"></span><span>Logistic regression · 16,338 words</span></div>
+          <div class="dw__body">
+            <div class="dw__list">
+              <div class="dw__q">Paste a review</div>
+              <div class="dw__row is-on"><b>Tools</b><em>95% generated</em><span>Quick shipping and excellent furnace…</span></div>
+              <div class="dw__row"><b>Toys</b><em>95% original</em><span>I gave this to my 21-month-old…</span></div>
+              <div class="dw__row"><b>Kindle Store</b><em>84% original</em><span>The book pulls you in from the…</span></div>
+            </div>
+            <div class="dw__chat" data-ly-steps="900">
+              <div class="dw__me">Quick shipping and excellent furnace control. The quality is good too. The only reason I ordered this is because I had to replace a defective switch in the</div>
+              <div class="dw__tool" data-step>Kept 12 of 28 words, weighed against 16,338</div>
+              <div class="dw__bot" data-step><strong>Generated, 95% sure.</strong> “reason” and “replace” pushed it there hardest.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="detector" aria-labelledby="detector-h">
+    <div class="wrap">
+      <div class="grid">
+        <h2 class="span-5" id="detector-h">The detector, with 11 reviews it never saw</h2>
+        <p class="span-6 start-7 lede t-lead">Pick a held-out review or paste your own. Words that point to a generated review turn amber, words people use more turn blue. <a class="link" href="#method">See how a review is scored</a></p>
+      </div>
+      <div class="ui app fill" data-ui-pause-host aria-label="The detector: test reviews beside the open review and its score">
+        <div class="app__pane app__pane--list">
+          <div class="ui ui-panel ui-win">
+            <div class="ui-win__bar">
+              <span class="ui-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+              <span class="ui-win__crumb">Detector <i>/</i> <b>Held-out reviews</b></span>
+              <span class="ui-spacer"></span>
+              <span class="ui-win__search" aria-hidden="true"><svg class="ui-icon" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><span class="ui-win__ph">11 of 10,108</span></span>
+            </div>
+            <div class="ui-win__body">
+              <div class="ui-win__main">
+                <ul class="ui-win__rows" id="det-list" aria-label="Held-out reviews"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="app__pane app__pane--open">
+          <div class="ui ui-det det" id="det">
+            <div class="det__row"><label for="det-input" id="det-meta">Tools and Home Improvement · labelled generated</label><button class="btn btn--secondary" type="button" id="det-go">Score this review</button></div>
+            <textarea id="det-input" name="review" rows="3">Quick shipping and excellent furnace control. The quality is good too. The only reason I ordered this is because I had to replace a defective switch in the</textarea>
+            <div class="det__verdict" aria-live="polite">
+              <b id="det-verdict" data-v="CG">Generated, 95% sure</b>
+              <div class="det__split" id="det-split" style="--cg:95%"><i></i></div>
+              <div class="det__ends"><span>Generated</span><span>Original</span></div>
+            </div>
+            <p class="det__text" id="det-text">Quick shipping and excellent furnace control. The quality is good too. The only reason I ordered this is because I had to replace a defective switch in the</p>
+            <p class="det__h">Words that moved the score most</p>
+            <div class="bars" id="det-bars">
+              <div><span>reason</span><i class="is-cg" style="--w:100%"></i><em>−1.50</em></div>
+              <div><span>replace</span><i class="is-cg" style="--w:78%"></i><em>−1.18</em></div>
+              <div><span>quality</span><i class="is-cg" style="--w:36%"></i><em>−0.53</em></div>
+              <div><span>defective</span><i class="is-cg" style="--w:24%"></i><em>−0.35</em></div>
+              <div><span>good</span><i class="is-cg" style="--w:19%"></i><em>−0.28</em></div>
+              <div><span>ordered</span><i class="is-cg" style="--w:17%"></i><em>−0.26</em></div>
+              <div><span>shipping</span><i class="is-cg" style="--w:13%"></i><em>−0.20</em></div>
+              <div><span>Quick</span><i class="is-or" style="--w:12%"></i><em>+0.18</em></div>
+              <div><span>control</span><i class="is-or" style="--w:9%"></i><em>+0.14</em></div>
+              <div><span>furnace</span><i class="is-or" style="--w:4%"></i><em>+0.06</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-halo" id="method" style="--hm: 2" aria-labelledby="method-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="method-h">A review is scored in 3 steps</h2>
+        <p>The same three steps run in train.py and in this page’s JavaScript, so both give a review the same score.</p>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">1</span>
+          <h3>Strips a review to its words</h3>
+          <p>Of the furnace review’s 28 words, 12 are kept: the rest are words like “the”, “is” and “I”.</p>
+          <div class="panel" data-fx="painterly-landscape" data-fx-seed="21" data-fx-palette='{"bg":"#a3b0b6","accent":"#c49a6c"}' data-fx-params='{"blur":1,"brush":0.35,"slope":0,"hillY":0.3,"horizon":0.62,"drift":0}'>
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:40px;--ay-sm:20px" data-ui-loop>
+              <div class="ui mini"><div class="mini__head"><b>Tokens</b><span>12 of 28</span></div>
+                <p class="tok"><b>Quick</b> <b>shipping</b> <s>and</s> <b>excellent</b> <b>furnace</b> <b>control</b> <s>The</s> <b>quality</b> <s>is</s> <b>good</b> <s>too</s> <s>The</s> <s>only</s> <b>reason</b> <s>I</s> <b>ordered</b> <s>this</s> <s>is</s> <s>because</s> <s>I</s> <s>had</s> <s>to</s> <b>replace</b> <s>a</s> <b>defective</b> <b>switch</b></p>
+              </div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">2</span>
+          <h3>Weighs each review word by TF-IDF</h3>
+          <p>Rarer words weigh more: “furnace” gets 0.48 and “good” 0.12, once the review is scaled to length one.</p>
+          <div class="panel">
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:40px;--ay-sm:20px">
+              <div class="ui mini"><div class="mini__head"><b>TF-IDF weight</b><span>12 words</span></div>
+                <div class="bars">
+                  <div><span>furnace</span><i style="--w:100%"></i><em>0.48</em></div>
+                  <div><span>Quick</span><i style="--w:82%"></i><em>0.39</em></div>
+                  <div><span>defective</span><i style="--w:73%"></i><em>0.35</em></div>
+                  <div><span>switch</span><i style="--w:62%"></i><em>0.30</em></div>
+                  <div><span>shipping</span><i style="--w:61%"></i><em>0.29</em></div>
+                  <div><span>reason</span><i style="--w:45%"></i><em>0.22</em></div>
+                </div>
+              </div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">3</span>
+          <h3>Adds up 16,338 learned weights</h3>
+          <p>Each kept word adds its weight. “reason” and “replace” tip this review to 95% generated.</p>
+          <div class="panel">
+            <div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:40px;--ay-sm:20px">
+              <div class="ui mini"><div class="mini__head"><b>Score</b><span>weight × TF-IDF</span></div>
+                <div class="score">
+                  <b>95% generated</b>
+                  <div class="det__split" style="--cg:95%"><i></i></div>
+                  <div class="bars">
+                    <div><span>reason</span><i class="is-cg" style="--w:100%"></i><em>−1.50</em></div>
+                    <div><span>replace</span><i class="is-cg" style="--w:78%"></i><em>−1.18</em></div>
+                    <div><span>quality</span><i class="is-cg" style="--w:36%"></i><em>−0.53</em></div>
+                    <div><span>Quick</span><i class="is-or" style="--w:12%"></i><em>+0.18</em></div>
+                  </div>
+                </div>
+              </div>
+            </div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="numbers" aria-labelledby="numbers-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="numbers-h">Trained on 30,324 reviews. <span class="muted">Scored once on 10,108 it had never seen.</span></h2>
+      </div>
+      <div class="grid">
+        <div class="span-5">
+          <div class="grid stats" data-moment="counter-rolls">
+            <div class="span-6"><p class="t-stat">40,432</p><p class="t-small muted">labelled reviews in the dataset</p></div>
+            <div class="span-6"><p class="t-stat">16,338</p><p class="t-small muted">words with a learned weight</p></div>
+            <div class="span-6"><p class="t-stat">1,156</p><p class="t-small muted">test reviews the page model gets wrong</p></div>
+            <div class="span-6"><p class="t-stat">88.6%</p><p class="t-small muted">right on the held-out quarter</p></div>
+          </div>
+        </div>
+        <div class="cm span-6 start-7" role="img" aria-label="The page model on 10,108 test reviews: of 5,054 generated reviews it caught 4,387 and missed 667; of 5,054 original reviews it passed 4,565 and flagged 489">
+          <div class="ui mini">
+            <div class="mini__head"><b>Page model on the test quarter</b><span>10,108 reviews</span></div>
+            <div class="cm__grid">
+              <span></span><span class="cm__h">Says generated</span><span class="cm__h">Says original</span>
+              <span class="cm__h cm__row">Generated</span><b class="cm__c" style="--k:.87">4,387</b><b class="cm__c" style="--k:.13">667</b>
+              <span class="cm__h cm__row">Original</span><b class="cm__c" style="--k:.10">489</b><b class="cm__c" style="--k:.90">4,565</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="results" aria-labelledby="results-h">
+    <div class="wrap">
+      <div class="grid">
+        <div class="span-5 stack-6">
+          <h2 id="results-h">SVC gets 90% of unseen reviews right</h2>
+          <p class="t-lead">All three of the notebook’s models trained on the same reviews and were scored once on the test quarter. The first version never finished training the forest.</p>
+          <ul class="facts">
+            <li><b>SVC</b> 90.03%, about 5 minutes to train</li>
+            <li><b>Logistic regression</b> 88.54%, about 1 second</li>
+            <li><b>Random forest</b> 85.98%, about 45 seconds</li>
+          </ul>
+          <a class="link" href="https://github.com/Ayush-yadav11/FakeReviewDetection/blob/main/results/metrics.json">Read metrics.json</a>
+        </div>
+        <div class="frame frame--split span-6 start-7" data-visual>
+          <div class="dg" data-diagram='{"layout":"lanes","alt":"A review is turned into TF-IDF weights, scored by three models in parallel, SVC, logistic regression and random forest, and labelled generated or original.","curve":"curve","input":{"label":"Review","icon":"ui:file-text","kindCompact":"pill"},"core":{"label":"TF-IDF","icon":"si:scikitlearn"},"lanes":[{"label":"SVC","icon":"ui:cpu","kindCompact":"pill"},{"label":"Logistic","icon":"ui:cpu","kindCompact":"pill"},{"label":"Forest","icon":"ui:cpu","kindCompact":"pill"}],"output":{"label":"CG or OR","icon":"ui:check","done":true,"kindCompact":"pill"}}'></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section ground-surface" id="words" aria-labelledby="words-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="words-h">Words that give a generated review away. <span class="muted">Learned weights, and the phrases behind them.</span></h2>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-6 m-nolift">
+          <h3>Review words that tip the score</h3>
+          <p>The words that push hardest each way: amber toward generated, blue toward a person.</p>
+          <div class="panel"><div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:420px;--ax:max(24px, 50% - 210px);--ay:32px;--ay-sm:20px">
+            <div class="ui mini"><div class="mini__head"><b>Learned weight</b><span>per word</span></div>
+              <div class="bars">
+                <div><span>problem</span><i class="is-cg" style="--w:100%"></i><em>−7.36</em></div>
+                <div><span>reason</span><i class="is-cg" style="--w:95%"></i><em>−6.98</em></div>
+                <div><span>couple</span><i class="is-cg" style="--w:74%"></i><em>−5.46</em></div>
+                <div><span>admit</span><i class="is-cg" style="--w:73%"></i><em>−5.35</em></div>
+                <div><span>even</span><i class="is-or" style="--w:78%"></i><em>+5.75</em></div>
+                <div><span>though</span><i class="is-or" style="--w:63%"></i><em>+4.67</em></div>
+                <div><span>without</span><i class="is-or" style="--w:58%"></i><em>+4.29</em></div>
+              </div>
+            </div>
+          </div></div></div>
+        </article>
+        <article class="card card--row card--open span-6 m-nolift">
+          <h3>888 generated reviews say “The only reason”</h3>
+          <p>Of the 20,216 reviews people wrote, 51 do. Generated reviews also run 12 words shorter.</p>
+          <div class="panel"><div class="stage stage--fade-b"><div class="at-rise fit" style="--fit-max:420px;--ax:max(24px, 50% - 210px);--ay:32px;--ay-sm:20px">
+            <div class="ui mini"><table class="phr"><thead><tr><th>Phrase or length</th><th>Generated</th><th>Original</th></tr></thead>
+              <tbody><tr><td>the only reason</td><td>888</td><td>51</td></tr><tr><td>I would recommend</td><td>1,881</td><td>225</td></tr><tr><td>downside</td><td>246</td><td>58</td></tr><tr><td>even though</td><td>23</td><td>255</td></tr><tr><td>words, on average</td><td>61.3</td><td>73.6</td></tr></tbody></table></div>
+          </div></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="data" aria-labelledby="data-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="data-h">40,432 Amazon reviews, half of them generated</h2>
+        <p class="lede">Salminen and colleagues paired 20,216 real reviews with 20,216 written by GPT-2, across ten product categories. <a class="link" href="https://doi.org/10.1016/j.jretconser.2021.102771">Read the paper</a></p>
+      </div>
+      <div class="grid rv-grid">
+        <article class="card span-6 m-nolift rv"><p>These is super cute and looks just like the picture. I will say that my daughter does not like the two small pieces</p><span class="lab" data-v="CG">Generated · Toys and Games</span></article>
+        <article class="card span-6 m-nolift rv"><p>I gave this to my 21-month-old and she loves it. She has become fascinated with digging and playing in the dirt lately and immediately knew what to do with this. The toys seem well made.</p><span class="lab" data-v="OR">Original · Toys and Games</span></article>
+      </div>
+      <ul class="facts">
+        <li><b>Labels</b> CG for generated, OR for original</li>
+        <li><b>Split</b> 75% to train, 25% to test, seed 42</li>
+        <li><b>Ratings</b> 24,559 of the reviews give five stars</li>
+      </ul>
+      <div data-moment="marquee-row" data-moment-opts='{"speed": 32}' class="marquee">
+        <ul class="mo-mq__track"><li>Kindle Store</li><li>Books</li><li>Pet Supplies</li><li>Home and Kitchen</li><li>Electronics</li><li>Sports and Outdoors</li><li>Tools and Home Improvement</li><li>Clothing, Shoes and Jewelry</li><li>Toys and Games</li><li>Movies and TV</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section g2m" id="faq" aria-labelledby="faq-h">
+    <div class="wrap grid">
+        <div class="span-5 stack-5">
+          <h2 id="faq-h">Questions</h2>
+          <p class="muted">About the detector, the data and running it yourself.</p>
+          <a class="link" href="https://github.com/Ayush-yadav11/FakeReviewDetection/issues">Open an issue on GitHub</a>
+          <div class="ui ui-term term" role="img" aria-label="The output of python train.py: 40,432 reviews; logistic regression 88.54%, SVC 90.03%, random forest 85.98%, and the page model 88.56%">
+<pre><b>$</b> python train.py
+40,432 reviews  CG 20,216  OR 20,216
+LogisticRegression  88.54%  (fit 1s)
+SVC                 90.03%  (fit 319s)
+RandomForest        85.98%  (fit 44s)
+Browser model       88.56%  (fit 3s)
+<b>browser model:</b> 16,338 terms, 0.39 MB</pre>
+          </div>
+        </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>Does it catch reviews written by ChatGPT?</h3><p>Not reliably. It learned from reviews GPT-2 wrote for this dataset, so text from newer models can score as original.</p></div>
+          <div class="faq__item"><h3>Does a review I paste leave my browser?</h3><p>No. The page downloads the 0.39 MB model once and scores in your browser. Nothing is sent anywhere.</p></div>
+          <div class="faq__item"><h3>Why does the detector use logistic regression?</h3><p>The SVC is 1.5 points better, but logistic regression fits in one small file and explains its score word by word.</p></div>
+          <div class="faq__item"><h3>Can I train the detector myself?</h3><p>Yes: pip install -r requirements.txt, then python train.py. All three models take about six minutes on a laptop.</p></div>
+          <div class="faq__item"><h3>What do the CG and OR review labels mean?</h3><p>CG marks a computer-generated review and OR an original one written by a person.</p></div>
+        </div>
+      
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--type">
+      <div class="section-head">
+        <h2 id="close-h">Score a review in your browser</h2>
+        <p>Nothing to install and nothing sent: the model runs on this page.</p>
+      </div>
+      <a class="btn btn--primary btn--xl btn--wide" href="#detector">Try the detector<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>Fake Review Detection</a>
+          <p class="footer__lede">A classifier for computer-written reviews.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Project</h3><ul><li><a href="#detector">Detector</a></li><li><a href="#method">Scoring</a></li><li><a href="#results">Results</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Data</h3><ul><li><a href="#words">Words</a></li><li><a href="#data">Reviews</a></li><li><a href="#faq">Questions</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Code</h3><ul><li><a href="https://github.com/Ayush-yadav11/FakeReviewDetection">Repository</a></li><li><a href="https://github.com/Ayush-yadav11/FakeReviewDetection/blob/main/train.py">train.py</a></li><li><a href="https://github.com/Ayush-yadav11/FakeReviewDetection/blob/main/main.ipynb">Notebook</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Author</h3><ul><li><a href="https://ayush-yadav.me/">Ayush Yadav</a></li><li><a href="https://github.com/Ayush-yadav11">GitHub</a></li><li><a href="https://www.linkedin.com/in/ayushyadav2611">LinkedIn</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 Ayush Yadav</span>
+        <div class="socials"></div>
+        <span class="credits">Reviews from Salminen et al. (2022). Product names and logos are trademarks of their owners.</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<nav class="actionbar" aria-label="Quick actions">
+  <a class="btn btn--primary" href="#detector">Try the detector</a>
+</nav>
+
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/diagrams/mount.js"></script>
+<script type="module" src="detector.js"></script>
+</body>
+</html>
